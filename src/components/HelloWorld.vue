@@ -37,7 +37,7 @@
       </a-dropdown>
     </div>
     <div ng-if="products.length">
-       <a-list :grid="{ gutter: 16, column: 4 }" :data-source="products">
+       <a-list :grid="{ gutter: 16, column: 4 }" :data-source="[...products]">
          <a-list-item slot="renderItem" slot-scope="item, index" :key="index" class="item-list">
            <a-card>
              <img
@@ -74,10 +74,14 @@ export default {
     }
   },
   beforeMount(){
-    this.GLOBAL.fetchData((err, products) => {
-      this.products = products;
-      this.originalProducts = products
-      this.getFilterKey(products)
+    this.GLOBAL && this.GLOBAL.fetchData((err, products) => {
+      if(Array.isArray(products)) {
+        this.products = products;
+        this.originalProducts = products
+        this.getFilterKey(products)
+      } else {
+        console.log(err)
+      }
     });
  },
  methods: {
